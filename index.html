@@ -1,0 +1,1069 @@
+```html
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Code Space</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+      background: #1e1e1e;
+      color: #cccccc;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    /* =========================
+       App
+    ========================= */
+
+    #app {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* =========================
+       Top Bar
+    ========================= */
+
+    .topbar {
+      height: 48px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      background: #181818;
+      border-bottom: 1px solid #2b2b2b;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #eeeeee;
+    }
+
+    .brand-icon {
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      display: grid;
+      place-items: center;
+      background: #252525;
+      color: #ffffff;
+      font-size: 14px;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .top-button {
+      height: 30px;
+      border: 1px solid #3b3b3b;
+      border-radius: 5px;
+      padding: 0 11px;
+      background: #252525;
+      color: #cccccc;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+
+    .top-button:hover {
+      background: #303030;
+      color: #ffffff;
+    }
+
+    .run-button {
+      background: #16825d;
+      border-color: #16825d;
+      color: white;
+      font-weight: 600;
+    }
+
+    .run-button:hover {
+      background: #1a9b6e;
+    }
+
+    /* =========================
+       Main
+    ========================= */
+
+    .main {
+      min-height: 0;
+      flex: 1;
+      display: flex;
+    }
+
+    /* =========================
+       Activity Bar
+    ========================= */
+
+    .activitybar {
+      width: 52px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 8px;
+      background: #181818;
+      border-right: 1px solid #2b2b2b;
+    }
+
+    .activity-button {
+      width: 44px;
+      height: 44px;
+      margin-bottom: 3px;
+      border: 0;
+      background: transparent;
+      color: #777777;
+      font-size: 20px;
+      cursor: pointer;
+      border-left: 2px solid transparent;
+    }
+
+    .activity-button:hover {
+      color: #cccccc;
+    }
+
+    .activity-button.active {
+      color: #ffffff;
+      border-left-color: #ffffff;
+    }
+
+    /* =========================
+       Explorer
+    ========================= */
+
+    .sidebar {
+      width: 240px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      background: #181818;
+      border-right: 1px solid #2b2b2b;
+    }
+
+    .sidebar-title {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      padding: 0 14px;
+      font-size: 11px;
+      letter-spacing: 0.5px;
+      color: #bbbbbb;
+    }
+
+    .folder {
+      padding: 4px 10px;
+      color: #cccccc;
+      font-size: 13px;
+    }
+
+    .folder-name {
+      height: 28px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+    }
+
+    .file {
+      height: 29px;
+      display: flex;
+      align-items: center;
+      padding-left: 25px;
+      gap: 7px;
+      cursor: pointer;
+      font-size: 13px;
+      color: #bbbbbb;
+      user-select: none;
+    }
+
+    .file:hover {
+      background: #252525;
+    }
+
+    .file.active {
+      background: #37373d;
+      color: #ffffff;
+    }
+
+    .file-icon.html {
+      color: #e44d26;
+    }
+
+    .file-icon.css {
+      color: #2965f1;
+    }
+
+    .file-icon.js {
+      color: #f7df1e;
+    }
+
+    /* =========================
+       Editor Area
+    ========================= */
+
+    .workspace {
+      min-width: 0;
+      min-height: 0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tabs {
+      height: 38px;
+      flex-shrink: 0;
+      display: flex;
+      background: #181818;
+      border-bottom: 1px solid #2b2b2b;
+      overflow-x: auto;
+    }
+
+    .tab {
+      min-width: 120px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0 12px;
+      border-right: 1px solid #2b2b2b;
+      background: #1f1f1f;
+      color: #888888;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .tab.active {
+      background: #1e1e1e;
+      color: #ffffff;
+      border-top: 1px solid #ffffff;
+    }
+
+    #editor {
+      flex: 1;
+      min-height: 0;
+    }
+
+    /* =========================
+       Terminal
+    ========================= */
+
+    .terminal {
+      height: 190px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      background: #181818;
+      border-top: 1px solid #2b2b2b;
+    }
+
+    .terminal-header {
+      height: 36px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 0 14px;
+      border-bottom: 1px solid #2b2b2b;
+      font-size: 12px;
+    }
+
+    .terminal-tab {
+      color: #ffffff;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #ffffff;
+    }
+
+    .terminal-body {
+      flex: 1;
+      overflow: auto;
+      padding: 10px 14px;
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #bbbbbb;
+    }
+
+    .terminal-line {
+      white-space: pre-wrap;
+    }
+
+    .terminal-prompt {
+      color: #6fdc9b;
+    }
+
+    /* =========================
+       Preview
+    ========================= */
+
+    #previewScreen {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: none;
+      flex-direction: column;
+      background: #ffffff;
+    }
+
+    #previewScreen.show {
+      display: flex;
+    }
+
+    .preview-bar {
+      height: 48px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      background: #181818;
+      color: #ffffff;
+    }
+
+    .preview-title {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .preview-actions {
+      display: flex;
+      gap: 7px;
+    }
+
+    .preview-button {
+      height: 30px;
+      padding: 0 11px;
+      border: 1px solid #3b3b3b;
+      border-radius: 5px;
+      background: #252525;
+      color: #dddddd;
+      cursor: pointer;
+    }
+
+    .preview-button:hover {
+      background: #333333;
+      color: #ffffff;
+    }
+
+    #previewFrame {
+      flex: 1;
+      width: 100%;
+      border: 0;
+      background: white;
+    }
+
+    /* =========================
+       Responsive
+    ========================= */
+
+    @media (max-width: 700px) {
+      .sidebar {
+        width: 190px;
+      }
+
+      .activitybar {
+        width: 45px;
+      }
+
+      .terminal {
+        height: 150px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div id="app">
+
+  <!-- Top Bar -->
+  <header class="topbar">
+
+    <div class="brand">
+      <div class="brand-icon">⌘</div>
+      <span>Code Space</span>
+    </div>
+
+    <div class="top-actions">
+      <button class="top-button" id="saveButton">
+        保存
+      </button>
+
+      <button class="top-button run-button" id="runButton">
+        ▶ 実行
+      </button>
+    </div>
+
+  </header>
+
+  <!-- Main -->
+  <main class="main">
+
+    <!-- Activity Bar -->
+    <aside class="activitybar">
+
+      <button class="activity-button active" title="Explorer">
+        📁
+      </button>
+
+      <button class="activity-button" title="検索">
+        🔍
+      </button>
+
+      <button class="activity-button" title="ソース管理">
+        🌿
+      </button>
+
+      <button class="activity-button" title="実行">
+        ▶
+      </button>
+
+      <button class="activity-button" title="設定">
+        ⚙
+      </button>
+
+    </aside>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+      <div class="sidebar-title">
+        EXPLORER
+      </div>
+
+      <div class="folder">
+
+        <div class="folder-name">
+          ▾ 📁 my-project
+        </div>
+
+        <div class="file active" data-file="index.html">
+          <span class="file-icon html">◈</span>
+          index.html
+        </div>
+
+        <div class="file" data-file="style.css">
+          <span class="file-icon css">◈</span>
+          style.css
+        </div>
+
+        <div class="file" data-file="script.js">
+          <span class="file-icon js">◈</span>
+          script.js
+        </div>
+
+      </div>
+
+    </aside>
+
+    <!-- Workspace -->
+    <section class="workspace">
+
+      <!-- Tabs -->
+      <div class="tabs">
+
+        <div class="tab active" data-file="index.html">
+          <span class="file-icon html">◈</span>
+          index.html
+        </div>
+
+        <div class="tab" data-file="style.css">
+          <span class="file-icon css">◈</span>
+          style.css
+        </div>
+
+        <div class="tab" data-file="script.js">
+          <span class="file-icon js">◈</span>
+          script.js
+        </div>
+
+      </div>
+
+      <!-- Monaco -->
+      <div id="editor"></div>
+
+      <!-- Terminal -->
+      <section class="terminal">
+
+        <div class="terminal-header">
+          <div class="terminal-tab">
+            TERMINAL
+          </div>
+
+          <div>
+            OUTPUT
+          </div>
+        </div>
+
+        <div class="terminal-body" id="terminalBody">
+          <div class="terminal-line">
+            <span class="terminal-prompt">$</span>
+            Code Space terminal
+          </div>
+
+          <div class="terminal-line">
+            プロジェクトを読み込みました。
+          </div>
+
+          <div class="terminal-line">
+            <span class="terminal-prompt">$</span>
+            _
+          </div>
+        </div>
+
+      </section>
+
+    </section>
+
+  </main>
+
+</div>
+
+
+<!-- Fullscreen Preview -->
+
+<div id="previewScreen">
+
+  <div class="preview-bar">
+
+    <div class="preview-title">
+      Code Space / Preview
+    </div>
+
+    <div class="preview-actions">
+
+      <button class="preview-button" id="reloadPreview">
+        ↻ 再実行
+      </button>
+
+      <button class="preview-button" id="backToCode">
+        ← コードに戻る
+      </button>
+
+    </div>
+
+  </div>
+
+  <iframe
+    id="previewFrame"
+    sandbox="allow-scripts"
+  ></iframe>
+
+</div>
+
+
+<!-- Monaco Editor -->
+<script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.52.2/min/vs/loader.js"></script>
+
+<script>
+
+  /* =====================================
+     Files
+  ===================================== */
+
+  const files = {
+
+    "index.html": {
+      language: "html",
+      content:
+`<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Website</title>
+</head>
+
+<body>
+
+  <h1>Hello World!</h1>
+
+  <p>
+    Code Spaceへようこそ。
+  </p>
+
+  <button onclick="hello()">
+    クリック
+  </button>
+
+</body>
+</html>`
+    },
+
+    "style.css": {
+      language: "css",
+      content:
+`body {
+  font-family: sans-serif;
+  text-align: center;
+  padding: 80px;
+}
+
+h1 {
+  font-size: 48px;
+}
+
+p {
+  color: #666;
+}
+
+button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  background: #222;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.8;
+}`
+    },
+
+    "script.js": {
+      language: "javascript",
+      content:
+`function hello() {
+  alert("Hello from Code Space!");
+}
+
+console.log("Code Space started.");`
+    }
+
+  };
+
+
+  /* =====================================
+     Monaco
+  ===================================== */
+
+  let editor;
+  let currentFile = "index.html";
+
+
+  require.config({
+    paths: {
+      vs: "https://cdn.jsdelivr.net/npm/monaco-editor@0.52.2/min/vs"
+    }
+  });
+
+
+  require(["vs/editor/editor.main"], function () {
+
+    editor = monaco.editor.create(
+      document.getElementById("editor"),
+      {
+        value: files[currentFile].content,
+
+        language: files[currentFile].language,
+
+        theme: "vs-dark",
+
+        automaticLayout: true,
+
+        fontSize: 14,
+
+        minimap: {
+          enabled: true
+        },
+
+        wordWrap: "off",
+
+        tabSize: 2,
+
+        insertSpaces: true,
+
+        smoothScrolling: true,
+
+        cursorSmoothCaretAnimation: "on",
+
+        bracketPairColorization: {
+          enabled: true
+        },
+
+        suggest: {
+          showMethods: true,
+          showFunctions: true
+        },
+
+        padding: {
+          top: 12
+        }
+      }
+    );
+
+
+    editor.onDidChangeModelContent(function () {
+
+      if (!files[currentFile]) return;
+
+      files[currentFile].content = editor.getValue();
+
+    });
+
+  });
+
+
+  /* =====================================
+     File Switching
+  ===================================== */
+
+  function openFile(fileName) {
+
+    if (!editor) return;
+
+    currentFile = fileName;
+
+    const file = files[fileName];
+
+    editor.setValue(file.content);
+
+    monaco.editor.setModelLanguage(
+      editor.getModel(),
+      file.language
+    );
+
+
+    document.querySelectorAll(".file").forEach(el => {
+
+      el.classList.toggle(
+        "active",
+        el.dataset.file === fileName
+      );
+
+    });
+
+
+    document.querySelectorAll(".tab").forEach(el => {
+
+      el.classList.toggle(
+        "active",
+        el.dataset.file === fileName
+      );
+
+    });
+
+  }
+
+
+  document.querySelectorAll(".file").forEach(el => {
+
+    el.addEventListener("click", function () {
+
+      openFile(this.dataset.file);
+
+    });
+
+  });
+
+
+  document.querySelectorAll(".tab").forEach(el => {
+
+    el.addEventListener("click", function () {
+
+      openFile(this.dataset.file);
+
+    });
+
+  });
+
+
+  /* =====================================
+     Save
+  ===================================== */
+
+  function saveProject() {
+
+    localStorage.setItem(
+      "code-space-project",
+      JSON.stringify(files)
+    );
+
+    addTerminalLine(
+      "プロジェクトを保存しました。"
+    );
+
+  }
+
+
+  document
+    .getElementById("saveButton")
+    .addEventListener("click", saveProject);
+
+
+  /* =====================================
+     Load
+  ===================================== */
+
+  function loadProject() {
+
+    const saved =
+      localStorage.getItem("code-space-project");
+
+    if (!saved) return;
+
+    try {
+
+      const parsed = JSON.parse(saved);
+
+      Object.keys(parsed).forEach(name => {
+
+        if (files[name]) {
+          files[name].content = parsed[name].content;
+        }
+
+      });
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  }
+
+
+  loadProject();
+
+
+  /* =====================================
+     Terminal
+  ===================================== */
+
+  function addTerminalLine(text) {
+
+    const terminal =
+      document.getElementById("terminalBody");
+
+    const line =
+      document.createElement("div");
+
+    line.className = "terminal-line";
+
+    line.textContent = text;
+
+    terminal.appendChild(line);
+
+    terminal.scrollTop =
+      terminal.scrollHeight;
+
+  }
+
+
+  /* =====================================
+     Build Preview
+  ===================================== */
+
+  function buildPreview() {
+
+    const html =
+      files["index.html"].content;
+
+    const css =
+      files["style.css"].content;
+
+    const js =
+      files["script.js"].content;
+
+
+    /*
+      HTMLへCSSとJSを注入
+    */
+
+    const parser =
+      new DOMParser();
+
+    const documentObject =
+      parser.parseFromString(
+        html,
+        "text/html"
+      );
+
+
+    const style =
+      documentObject.createElement("style");
+
+    style.textContent = css;
+
+    documentObject.head.appendChild(style);
+
+
+    const script =
+      documentObject.createElement("script");
+
+    script.textContent = js;
+
+    documentObject.body.appendChild(script);
+
+
+    const result =
+      "<!DOCTYPE html>" +
+      documentObject.documentElement.outerHTML;
+
+
+    return result;
+
+  }
+
+
+  /* =====================================
+     Run
+  ===================================== */
+
+  function runProject() {
+
+    if (!editor) return;
+
+    saveProject();
+
+
+    const preview =
+      document.getElementById("previewScreen");
+
+    const frame =
+      document.getElementById("previewFrame");
+
+
+    frame.srcdoc =
+      buildPreview();
+
+
+    preview.classList.add("show");
+
+
+    addTerminalLine(
+      "プロジェクトを実行しました。"
+    );
+
+  }
+
+
+  document
+    .getElementById("runButton")
+    .addEventListener(
+      "click",
+      runProject
+    );
+
+
+  /* =====================================
+     Back
+  ===================================== */
+
+  document
+    .getElementById("backToCode")
+    .addEventListener(
+      "click",
+      function () {
+
+        document
+          .getElementById("previewScreen")
+          .classList.remove("show");
+
+      }
+    );
+
+
+  /* =====================================
+     Reload Preview
+  ===================================== */
+
+  document
+    .getElementById("reloadPreview")
+    .addEventListener(
+      "click",
+      function () {
+
+        const frame =
+          document.getElementById("previewFrame");
+
+        frame.srcdoc =
+          buildPreview();
+
+      }
+    );
+
+
+  /* =====================================
+     Ctrl / Cmd + S
+  ===================================== */
+
+  document.addEventListener(
+    "keydown",
+    function (event) {
+
+      if (
+        (event.ctrlKey || event.metaKey) &&
+        event.key.toLowerCase() === "s"
+      ) {
+
+        event.preventDefault();
+
+        saveProject();
+
+      }
+
+    }
+  );
+
+
+  /* =====================================
+     Activity Buttons
+  ===================================== */
+
+  document
+    .querySelectorAll(".activity-button")
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        function () {
+
+          document
+            .querySelectorAll(".activity-button")
+            .forEach(btn =>
+              btn.classList.remove("active")
+            );
+
+          this.classList.add("active");
+
+        }
+      );
+
+    });
+
+</script>
+
+</body>
+</html>
+```
